@@ -1,4 +1,4 @@
-# muzage
+# golang-imgmod
 
 ## Usage
 ```bash
