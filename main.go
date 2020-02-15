@@ -14,7 +14,7 @@ import (
 type pixel struct {
 	r, g, b, a uint8
 }
-type convert func(uint8) uint8
+type convert func(uint8, float64) uint8
 
 func main() {
 	var infile string
@@ -26,7 +26,9 @@ func main() {
 	var imgtype string
 	flag.StringVar(&imgtype, "t", "jpeg", "file format (jpeg, bmp)")
 	flag.StringVar(&imgtype, "type", "jpeg", "file format (jpeg, bmp)")
-
+	var strength float64
+	flag.Float64Var(&strength, "s", 3.0, "strength of modification")
+	flag.Float64Var(&strength, "strength", 3.0, "strength of modification")
 	flag.Parse()
 
 	fmt.Println("Reading: ", infile)
@@ -34,15 +36,15 @@ func main() {
 	img := loadImage(infile, imgtype)
 	imgPixels := getPixels(img)
 
-	var moddedImage = modImage(imgPixels, img.Bounds().Dx(), img.Bounds().Dy(), pixelMod)
+	var moddedImage = modImage(imgPixels, img.Bounds().Dx(), img.Bounds().Dy(), pixelMod, strength)
 	writeImage(outfile, moddedImage, imgtype)
 	// for i, pixel := range getPixels(moddedImage) {
 	// 	fmt.Println("Pixel", i, "\t r g b a:", pixel)
 	// }
 }
 
-func pixelMod(p uint8) uint8 {
-	return uint8(float64(p) * 3.0)
+func pixelMod(p uint8, s float64) uint8 {
+	return uint8(float64(p) * s)
 }
 
 func loadImage(filename string, imgtype string) image.Image {
@@ -51,7 +53,7 @@ func loadImage(filename string, imgtype string) image.Image {
 	defer f.Close()
 	if imgtype == "bmp" {
 		img, err = bmp.Decode(f)
-	} else {
+	} else if imgtype == "jpeg" {
 		img, err = jpeg.Decode(f)
 	}
 	if err != nil {
@@ -98,15 +100,15 @@ func getPixels(img image.Image) []pixel {
 	return pixels
 }
 
-func modImage(pixels []pixel, Dx int, Dy int, fn convert) image.Image {
+func modImage(pixels []pixel, Dx int, Dy int, fn convert, strength float64) image.Image {
 	newRect := image.Rectangle{image.Point{0, 0}, image.Point{Dx, Dy}}
 	newRGBA := image.NewRGBA(newRect)
 	modded := make([]pixel, len(pixels))
 	for i, pixel := range pixels {
-		modded[i].r = fn(pixel.r)
-		modded[i].g = fn(pixel.g)
-		modded[i].b = fn(pixel.b)
-		modded[i].a = fn(pixel.a)
+		modded[i].r = fn(pixel.r, strength)
+		modded[i].g = fn(pixel.g, strength)
+		modded[i].b = fn(pixel.b, strength)
+		modded[i].a = fn(pixel.a, strength)
 
 		var loc = modded[i]
 		rgbaColor := color.RGBA{loc.r, loc.g, loc.b, loc.a}
