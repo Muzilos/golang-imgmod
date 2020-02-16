@@ -3,15 +3,19 @@
 ## Usage
 ```bash
 go build main.go
-go run ./main --input <input_file_name> --output <output_file_name>
+go run ./main [--input <input_file_name>] [--output <output_file_name>] [--type <jpeg/bmp>] [--strength <float64>]
 ```
 
 ### Arguments
 ``` bash
-  --input -i string
-        jpeg format image file to read (default "./img/painting.jpg")
+  --input string
+      image file to read (default "./img/painting.jpg")
   --output -o string
-        jpeg format filename for output (default "./img/modded.jpg")
+      filename for output (default "./img/modded.jpg")
+  --type -t string
+      file format (jpeg, bmp) (default "jpeg")
+  --strength -s float64
+      strength of modification (default 3.0)
 ```
 
 ## Contact
