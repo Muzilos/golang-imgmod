@@ -15,7 +15,7 @@ go run ./main [--input <input_file_name>] [--output <output_file_name>] [--type 
   --type -t string
       file format (jpeg, bmp) (default "jpeg")
   --strength -s float64
-      strength of modification (default 3)
+      strength of modification (default 3.0)
 ```
 
 ## Contact
