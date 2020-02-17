@@ -1,4 +1,4 @@
-# golang-imgmod
+# imgmod
 
 ## Usage
 ```bash

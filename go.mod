@@ -1,4 +1,4 @@
-module github.com/Muzilos/golang-imgmod
+module github.com/Muzilos/imgmod
 
 go 1.13
 
